@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom";
 import appContext from "../stores/appContext";
 import Provider from "../labs/Provider";
 import appStore from "../stores/appStore";
@@ -39,7 +39,6 @@ export function showDialog<T extends DialogProps>(
   props?: Omit<T, "destroy">
 ): DialogCallback {
   const tempDiv = document.createElement("div");
-  const dialog = createRoot(tempDiv);
   document.body.append(tempDiv);
 
   setTimeout(() => {
@@ -51,8 +50,8 @@ export function showDialog<T extends DialogProps>(
       tempDiv.firstElementChild?.classList.remove("showup");
       tempDiv.firstElementChild?.classList.add("showoff");
       setTimeout(() => {
-        dialog.unmount();
         tempDiv.remove();
+        ReactDOM.unmountComponentAtNode(tempDiv);
       }, ANIMATION_DURATION);
     },
   };
@@ -76,7 +75,7 @@ export function showDialog<T extends DialogProps>(
     );
   }
 
-  dialog.render(Fragment);
+  ReactDOM.render(Fragment, tempDiv);
 
   return cbs;
 }
